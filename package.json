@@ -1,0 +1,13 @@
+{
+  "name": "sn-machinery",
+  "version": "1.0.0",
+  "description": "SN Machinery full-stack rental platform",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "npm install --prefix client && npm run build --prefix client && npm install --prefix server && npm run build --prefix server",
+    "start": "node server/dist/index.js"
+  }
+}

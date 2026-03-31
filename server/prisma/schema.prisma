@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    Int            @id @default(autoincrement())
+  email                 String         @unique
+  password              String
+  name                  String
+  role                  String
+  phoneNumber           String
+  accountType           String         @default("Individual")
+  businessName          String?
+  businessEmail         String?
+  businessAddress       String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  notifications         Notification[]
+  rentals               Rental[]
+  isVerified            Boolean        @default(false)
+  verificationCode      String?
+  failedLoginAttempts   Int            @default(0)
+  accountLockedUntil    DateTime?
+  resetPasswordToken    String?
+  resetPasswordExpires  DateTime?
+}
+
+model Machine {
+  id           Int      @id @default(autoincrement())
+  name         String
+  type         String
+  status       String
+  dailyRate    Float
+  dailyRateRwf Float    @default(0)
+  healthStatus String   @default("Excellent")
+  plateNumber  String   @default("N/A")
+  description  String?
+  imageUrl     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  rentals      Rental[]
+}
+
+model Rental {
+  id            Int      @id @default(autoincrement())
+  startDate     DateTime
+  endDate       DateTime
+  status        String
+  totalCost     Float?
+  userId        Int
+  machineId     Int
+  driverId      Int?
+  hasInsurance  Boolean  @default(false)
+  hasDelivery   Boolean  @default(false)
+  hasOperator   Boolean  @default(false)
+  insuranceCost Float    @default(0)
+  deliveryCost  Float    @default(0)
+  operatorCost  Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  paymentMethod String?
+  driver        Staff?   @relation(fields: [driverId], references: [id])
+  machine       Machine  @relation(fields: [machineId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+  finances      Finance[]
+}
+
+model Invoice {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  status    String
+  rentalId  Int
+  createdAt DateTime @default(now())
+}
+
+model Staff {
+  id            Int      @id @default(autoincrement())
+  name          String
+  role          String
+  status        String
+  phoneNumber   String
+  email         String?
+  licenseNumber String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  rentals       Rental[]
+  tasks         Task[]
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  status      String
+  staffId     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  staff       Staff    @relation(fields: [staffId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  userId    Int?
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model Finance {
+  id          Int      @id @default(autoincrement())
+  type        String
+  category    String
+  description String
+  amount      Float
+  currency    String   @default("USD")
+  rentalId    Int?
+  rental      Rental?  @relation(fields: [rentalId], references: [id])
+  status      String   @default("Pending")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply font-sans antialiased text-secondary-900 bg-white;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-bold text-secondary-900;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Splash animations */
+@keyframes splashOverlayFade {
+  0% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes splashLogoPop {
+  0% { opacity: 0; transform: scale(0.72); filter: blur(2px); }
+  12% { opacity: 1; transform: scale(1); filter: blur(0); }
+  78% { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(0.98); filter: blur(0.5px); }
+}
+
+.splash-overlay {
+  /* 300ms delay + 2s animation */
+  animation: splashOverlayFade 2s ease-in-out forwards 300ms;
+  pointer-events: auto;
+}
+
+.splash-logo {
+  /* 300ms delay + 2s animation */
+  animation: splashLogoPop 2s cubic-bezier(.2,.9,.2,1) forwards 300ms;
+  will-change: transform, opacity;
+}
+
+::-webkit-scrollbar-track {
+  background: theme('colors.secondary.50');
+}
+
+::-webkit-scrollbar-thumb {
+  background: theme('colors.secondary.300');
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.secondary.400');
+}
