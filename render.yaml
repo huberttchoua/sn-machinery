@@ -35,14 +35,6 @@ services:
         sync: false
       - key: EMAIL_PASSWORD
         sync: false
-    # Persistent disk for machine images (paid Render plans only).
-    # Remove this section if you are on the free plan and handle
-    # file storage via a cloud bucket (e.g. Cloudinary / S3) instead.
-    disk:
-      name: uploads
-      mountPath: /opt/render/project/src/server/uploads
-      sizeGB: 1
-
 databases:
   - name: sn-machinery-db
     databaseName: sn_machinery
