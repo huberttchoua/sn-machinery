@@ -9,8 +9,8 @@ services:
     runtime: node
     # Build: install & compile both client and server
     buildCommand: >
-      cd client && npm install && npm run build &&
-      cd ../server && npm install && npm run build &&
+      cd client && npm install --include=dev && npm run build &&
+      cd ../server && npm install --include=dev && npm run build &&
       npx prisma db push --schema=./prisma/schema.prisma
     startCommand: node server/dist/index.js
     # The server listens on the PORT env var Render automatically injects
