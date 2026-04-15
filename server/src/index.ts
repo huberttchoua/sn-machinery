@@ -65,8 +65,12 @@ app.get('/api/health', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
     const clientDist = path.join(__dirname, '../../client/dist');
     app.use(express.static(clientDist));
-    // SPA fallback: return index.html for any non-API route
-    app.get('/{*splat}', (_req, res) => {
+    // SPA fallback: return index.html for any non-API, non-asset route
+    app.get('/{*splat}', (req, res) => {
+        const ext = path.extname(req.path);
+        if (ext && ext !== '.html') {
+            return res.status(404).json({ error: 'Not found' });
+        }
         res.sendFile(path.join(clientDist, 'index.html'));
     });
 }
