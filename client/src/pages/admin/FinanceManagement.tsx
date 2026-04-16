@@ -171,7 +171,7 @@ const FinanceManagement = () => {
             return;
         }
 
-        const XLSX = await import('xlsx');
+        const ExcelJS = (await import('exceljs')).default;
 
         const rows = filteredFinances.map((record) => {
             const amountUSD = record.amountUSD || record.amount;
@@ -194,12 +194,29 @@ const FinanceManagement = () => {
             };
         });
 
-        const worksheet = XLSX.utils.json_to_sheet(rows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Financial Records');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Financial Records');
 
+        if (rows.length > 0) {
+            worksheet.columns = Object.keys(rows[0]).map((key) => ({
+                header: key,
+                key,
+                width: 18,
+            }));
+            rows.forEach((row) => worksheet.addRow(row));
+        }
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
         const date = new Date().toISOString().slice(0, 10);
-        XLSX.writeFile(workbook, `financial-records-${date}.xlsx`);
+        a.href = url;
+        a.download = `financial-records-${date}.xlsx`;
+        a.click();
+        URL.revokeObjectURL(url);
     };
 
     return (
