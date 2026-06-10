@@ -54,10 +54,34 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        await prisma.user.delete({ where: { id: Number(id) } });
+        const id = Number(req.params.id);
+        if (Number.isNaN(id)) {
+            return res.status(400).json({ error: 'Invalid user ID' });
+        }
+
+        const [rentalCount, notificationCount] = await Promise.all([
+            prisma.rental.count({ where: { userId: id } }),
+            prisma.notification.count({ where: { userId: id } }),
+        ]);
+
+        if (rentalCount > 0) {
+            return res.status(400).json({ error: 'Cannot delete user with existing rentals' });
+        }
+
+        if (notificationCount > 0) {
+            return res.status(400).json({ error: 'Cannot delete user with existing notifications' });
+        }
+
+        await prisma.user.delete({ where: { id } });
         res.json({ message: 'User deleted successfully' });
-    } catch (error) {
+    } catch (error: any) {
+        console.error('deleteUser error:', error);
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        if (error.code === 'P2003') {
+            return res.status(400).json({ error: 'Cannot delete user because related data exists' });
+        }
         res.status(500).json({ error: 'Failed to delete user' });
     }
 };
