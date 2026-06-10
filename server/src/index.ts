@@ -71,7 +71,7 @@ if (process.env.NODE_ENV === 'production') {
     const clientDist = path.join(__dirname, '../../client/dist');
     app.use(express.static(clientDist));
     // SPA fallback: return index.html for any non-API, non-asset route
-    app.get('/{*splat}', (req, res) => {
+    app.get('/*', (req, res) => {
         const ext = path.extname(req.path);
         if (ext && ext !== '.html') {
             return res.status(404).json({ error: 'Not found' });
@@ -83,6 +83,6 @@ if (process.env.NODE_ENV === 'production') {
 const port = typeof PORT === 'string' ? parseInt(PORT, 10) : PORT;
 
 app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on http://0.0.0.0:${port}`);
-    console.log(`Accessible from other devices on your network`);
+    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is bound to 0.0.0.0 so it is also reachable from other devices on your network if your firewall allows it.`);
 });
