@@ -18,7 +18,7 @@ services:
         value: production
       - key: DATABASE_URL
         fromDatabase:
-          name: sn-machinery-db
+          name: snmachinery_db
           property: connectionString
       # Auto-generated strong secret — Render rotates it only on re-deploy
       - key: JWT_SECRET
@@ -37,7 +37,7 @@ services:
       - key: EMAIL_PASSWORD
         sync: false
 databases:
-  - name: sn-machinery-db
+  - name: snmachinery_db
     databaseName: sn_machinery
     user: sn_machinery_user
     plan: free
