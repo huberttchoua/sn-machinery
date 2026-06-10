@@ -57,6 +57,16 @@ app.use('/api/finances', financeRoutes);
 
 
 
+app.get('/', (req, res) => {
+    if (process.env.NODE_ENV !== 'production') {
+        const clientUrl = process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+        return res.redirect(clientUrl);
+    }
+
+    const clientDist = path.join(__dirname, '../../client/dist');
+    res.sendFile(path.join(clientDist, 'index.html'));
+});
+
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Server is running' });
 });
