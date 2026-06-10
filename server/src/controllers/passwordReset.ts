@@ -34,7 +34,8 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
         });
 
         // Send password reset email
-        const resetLink = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+        const clientUrl = process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+        const resetLink = `${clientUrl}/reset-password?token=${resetToken}`;
         const resetEmail = emailTemplates.passwordReset(user.name, resetLink);
         
         await sendEmail({

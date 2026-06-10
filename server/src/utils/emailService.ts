@@ -11,6 +11,8 @@ interface EmailOptions {
     html?: string;
 }
 
+const FRONTEND_URL = process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+
 // Create reusable transporter
 const createTransporter = () => {
     const emailService = process.env.EMAIL_SERVICE || 'gmail';
@@ -177,7 +179,7 @@ export const emailTemplates = {
                     </div>
 
                     <div style="text-align: center; margin: 30px 0;">
-                        <a href="http://localhost:5173/login" style="background-color: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Login to Your Account</a>
+                        <a href="${FRONTEND_URL}/login" style="background-color: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Login to Your Account</a>
                     </div>
 
                     <p style="font-size: 14px; color: #6b7280;">If you have any questions or need assistance, simply reply to this email or contact our support team.</p>
@@ -205,7 +207,7 @@ Here is what you can do next:
 - Track Requests in real-time
 - Secure Payments
 
-Login to your account here: http://localhost:5173/login
+Login to your account here: ${FRONTEND_URL}/login
 
 Best regards,
 SN Machinery Team`

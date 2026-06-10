@@ -14,10 +14,12 @@ export const createMachine = async (req: Request, res: Response) => {
     try {
         const { name, type, dailyRate, dailyRateRwf, healthStatus, plateNumber, description, imageUrl: explicitImageUrl } = req.body;
 
+        const serverBaseUrl = process.env.SERVER_URL || `${req.protocol}://${req.get('host')}`;
+
         // Handle file upload
         let finalImageUrl = explicitImageUrl;
         if (req.file) {
-            finalImageUrl = `http://localhost:3001/uploads/${req.file.filename}`;
+            finalImageUrl = `${serverBaseUrl}/uploads/${req.file.filename}`;
         }
 
         const machine = await prisma.machine.create({
@@ -45,10 +47,12 @@ export const updateMachine = async (req: Request, res: Response) => {
         const { id } = req.params;
         const { name, type, dailyRate, dailyRateRwf, healthStatus, plateNumber, description, imageUrl: explicitImageUrl, status } = req.body;
 
+        const serverBaseUrl = process.env.SERVER_URL || `${req.protocol}://${req.get('host')}`;
+
         // Handle file upload
         let finalImageUrl = explicitImageUrl;
         if (req.file) {
-            finalImageUrl = `http://localhost:3001/uploads/${req.file.filename}`;
+            finalImageUrl = `${serverBaseUrl}/uploads/${req.file.filename}`;
         }
 
         const machine = await prisma.machine.update({

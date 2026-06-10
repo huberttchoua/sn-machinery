@@ -144,7 +144,8 @@ export const login = async (req: Request, res: Response) => {
                 });
 
                 // Send account locked email with magic login link
-                const magicLink = `${process.env.CLIENT_URL || 'http://localhost:5173'}/magic-login?token=${magicToken}`;
+                const clientUrl = process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+                const magicLink = `${clientUrl}/magic-login?token=${magicToken}`;
                 const accountLockedEmail = emailTemplates.accountLocked(user.name, lockUntil.toLocaleString());
                 const magicLinkEmail = emailTemplates.magicLoginLink(user.name, magicLink);
                 
